@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+
+require 'thor'
+require_relative '../lib/multi_tools'
+
+class MultiToolsCLI < Thor
+  desc 'domain DOMAIN', 'Perform reconnaissance on a domain'
+  def domain(domain_name)
+    recon = MultiTools::DomainRecon.new(domain_name)
+    results = recon.run
+    puts JSON.pretty_generate(results)
+  end
+
+  desc 'ip IP_ADDRESS', 'Look up information about an IP address'
+  def ip(ip_address)
+    lookup = MultiTools::IpLookup.new(ip_address)
+    results = lookup.run
+    puts JSON.pretty_generate(results)
+  end
+
+  desc 'email DOMAIN', 'Find emails associated with a domain'
+  def email(domain)
+    finder = MultiTools::EmailFinder.new(domain)
+    results = finder.run
+    puts JSON.pretty_generate(results)
+  end
+
+  desc 'social USERNAME', 'Search for a username across social media'
+  def social(username)
+    social = MultiTools::SocialMedia.new(username)
+    results = social.run
+    puts JSON.pretty_generate(results)
+  end
+
+  desc 'url URL', 'Scan and analyze a URL'
+  def url(target_url)
+    scanner = MultiTools::UrlScanner.new(target_url)
+    results = scanner.run
+    puts JSON.pretty_generate(results)
+  end
+
+  desc 'version', 'Show version'
+  def version
+    puts "MultiTools v#{MultiTools::VERSION}"
+  end
+end
+
+MultiToolsCLI.start(ARGV)
